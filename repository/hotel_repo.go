@@ -23,7 +23,8 @@ func (h *Hotelstruct)AddHotel(w http.ResponseWriter, r *http.Request){
 		return
 	}
 
-	_,err=h.DB.Exec(`INSERT INTO hotels VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,addhotelDetails.UserId,uuid.NewString(),addhotelDetails.HotelName,addhotelDetails.HotelCategory,addhotelDetails.HotelType,addhotelDetails.HotelRating,addhotelDetails.HotelLocation,addhotelDetails.HotelOpen,addhotelDetails.HotelClose,addhotelDetails.HotelImage)
+	_,err=h.DB.Exec(`INSERT INTO hotels VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,addhotelDetails.LocationId,addhotelDetails.UserId,uuid.NewString(),addhotelDetails.HotelName,addhotelDetails.HotelCategory,addhotelDetails.HotelType,addhotelDetails.HotelRating,addhotelDetails.HotelLocation,addhotelDetails.HotelOpen,addhotelDetails.HotelClose,addhotelDetails.HotelImage)
+	fmt.Println(err)
 	if err!=nil{
 		json.NewEncoder(w).Encode(map[string]string{"message":"Query execution error"})
 		return
@@ -44,7 +45,7 @@ func (h *Hotelstruct)Gethotel(w http.ResponseWriter,r *http.Request){
 	var vars =mux.Vars(r)
 	var gethotel = vars["gethotel_id"]
 
-	res,err:=h.DB.Query(`SELECT hotel_name,hotel_category,hotel_type,hotel_rating,hotel_location,hotel_open,hotel_close,hotel_image FROM hotels WHERE hotel_id=$1`,gethotel)
+	res,err:=h.DB.Query(`SELECT hotel_id,hotel_name,hotel_category,hotel_type,hotel_rating,hotel_location,hotel_open,hotel_close,hotel_image FROM hotels WHERE location_id=$1`,gethotel)
 		fmt.Println(err)
 	if err!=nil{
 		json.NewEncoder(w).Encode(map[string]string{"message":"Get hotel query execution error"})
@@ -55,7 +56,7 @@ func (h *Hotelstruct)Gethotel(w http.ResponseWriter,r *http.Request){
 
 	for res.Next(){
 		var hotel models.Hotels
-		err=res.Scan(&hotel.HotelName,&hotel.HotelCategory,&hotel.HotelType,&hotel.HotelRating,&hotel.HotelLocation,&hotel.HotelOpen,&hotel.HotelClose,&hotel.HotelImage)
+		err=res.Scan(&hotel.HotelId,&hotel.HotelName,&hotel.HotelCategory,&hotel.HotelType,&hotel.HotelRating,&hotel.HotelLocation,&hotel.HotelOpen,&hotel.HotelClose,&hotel.HotelImage)
 		if err!=nil{
 			json.NewEncoder(w).Encode(map[string]string{"message":"Error occured 1"})
 			return

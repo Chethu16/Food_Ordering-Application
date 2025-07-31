@@ -30,7 +30,14 @@ func Initializing(databaseconnection *sql.DB){
 		
 		
 		)`,
+
+		`CREATE TABLE IF NOT EXISTS locations(
+		location_id VARCHAR NOT NULL PRIMARY KEY,
+		location_name VARCHAR NOT NULL
+		)`,
+
 		`CREATE TABLE IF NOT EXISTS hotels(
+		location_id VARCHAR NOT NULL,
 		user_id VARCHAR NOT NULL,
 		hotel_id VARCHAR NOT NULL PRIMARY KEY,
 		hotel_name VARCHAR NOT NULL,
@@ -41,6 +48,7 @@ func Initializing(databaseconnection *sql.DB){
 		hotel_open VARCHAR NOT NULL,
 		hotel_close VARCHAR NOT NULL,
 		hotel_image VARCHAR NOT NULL,
+		FOREIGN KEY (location_id) REFERENCES locations(location_id) ON DELETE CASCADE,
 		FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 
 		)`,
@@ -56,6 +64,7 @@ func Initializing(databaseconnection *sql.DB){
 		FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
 		FOREIGN KEY (hotel_id) REFERENCES hotels(hotel_id) ON DELETE CASCADE
 		)`,
+		
 	}
 	for _,query:=range queries{
 		_,err:=databaseconnection.Exec(query) 

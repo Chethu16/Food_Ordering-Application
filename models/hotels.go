@@ -1,6 +1,7 @@
 package models
 
 type Hotels struct{
+	LocationId string `json:"location_id"`
 	UserId string `json:"user_id"`
 	HotelId string `json:"hotel_id"`
 	HotelName string `json:"hotel_name"`

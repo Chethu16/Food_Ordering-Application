@@ -9,6 +9,7 @@ import (
 
 	"github.com/Chethu16/foodordering-system/models"
 	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -58,5 +59,16 @@ func (rg *Repo)Login(w http.ResponseWriter,r *http.Request){
 		return
 	}
 		json.NewEncoder(w).Encode(map[string]string{"user_id":dbuserid})
+}
+func(rg *Repo)DeleteUser(w http.ResponseWriter,r *http.Request){
+	var vars = mux.Vars(r)
+	var deleteuser = vars["deleteuser_id"]
+
+	_,err:=rg.DB.Exec(`DELETE FROM users WHERE user_id=$1`,deleteuser)
+	if err!=nil{
+		json.NewEncoder(w).Encode(map[string]string{"message":"Deleteuser Query execution error"})
+		return
+	}
+		json.NewEncoder(w).Encode(map[string]string{"message":"User deleted Succesfully"})
 }
 	
